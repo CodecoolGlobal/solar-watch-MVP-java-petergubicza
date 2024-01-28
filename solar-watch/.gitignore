@@ -1,0 +1,97 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+# Maven
+
+# Eclipse
+.settings/
+
+# IntelliJ
+.idea/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+
+# Logs
+log/
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Spring Boot
+!**/application*.yml
+
+# Compiled class file
+*.class
+
+# Compiled Java source
+*.jar
+
+# Compiled Python files
+*.pyc
+
+# Compiled Ruby files
+*.rb
+
+# Compiled TypeScript files
+*.ts
+
+# Compiled JavaScript files
+*.js
+
+# Compiled CSS files
+*.css
+
+# Generated static resources
+/bin/
+/build/
+/static/
+
+# Dependencies
+/lib/
+
+# IDE (e.g., Eclipse) metadata
+.metadata/
+
+# Temporary files
+.tmp/
+
+# Package Files #
+*.war
+*.ear
