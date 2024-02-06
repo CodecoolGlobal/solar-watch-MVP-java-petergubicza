@@ -24,7 +24,7 @@ public class SolarWatchController {
     }
 
     @GetMapping("/city-location")
-    public GeoLocation getCityLocation(@RequestParam String city) throws InvalidCityException {
+    public GeoLocation getCityLocation(@RequestParam String city) {
         return solarService.getCityLocation(city);
     }
 }

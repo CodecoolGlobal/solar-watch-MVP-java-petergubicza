@@ -33,9 +33,10 @@ public class SolarService {
 
         String apiUrl = String.format("%s?q=%s&appid=%s", OPENWEATHERMAP_API_URL, city, OPENWEATHERMAP_API_KEY);
         RestTemplate restTemplate = new RestTemplate();
-        OpenWeatherMapApiResponse openWeatherMapApiResponse = restTemplate.getForObject(apiUrl, OpenWeatherMapApiResponse.class);
-
-        if (openWeatherMapApiResponse == null) {
+        OpenWeatherMapApiResponse openWeatherMapApiResponse;
+        try {
+            openWeatherMapApiResponse = restTemplate.getForObject(apiUrl, OpenWeatherMapApiResponse.class);
+        } catch (Exception e) {
             throw new InvalidCityException();
         }
 
