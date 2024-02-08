@@ -1,4 +1,4 @@
 package com.codecool.solarwatch.model;
 
-public record SolarTimesResponse(String sunrise, String sunset) {}
-
+public record SolarTimesResponse(String sunrise, String sunset) {
+}
