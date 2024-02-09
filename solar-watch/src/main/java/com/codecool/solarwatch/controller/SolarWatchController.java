@@ -19,7 +19,7 @@ public class SolarWatchController {
 
     @GetMapping("/solar-times")
     public SolarTimesResponse getSunrise(@RequestParam String city, @RequestParam String date) {
-        System.out.println(solarService.getSolarTimes(city, LocalDate.parse(date)));
-        return solarService.getSolarTimes(city, LocalDate.parse(date));
+        System.out.println(solarService.getSolarTimes(city, date));
+        return solarService.getSolarTimes(city, date);
     }
 }
