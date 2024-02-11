@@ -7,6 +7,7 @@ import com.codecool.solarwatch.repository.CityRepository;
 import com.codecool.solarwatch.repository.SunsetSunriseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class SolarService {
@@ -14,12 +15,12 @@ public class SolarService {
     private static final String OPENWEATHERMAP_API_URL = "https://api.openweathermap.org/data/2.5/weather";
     private static final String OPENWEATHERMAP_API_KEY = System.getenv("OPENWEATHERMAP_API_KEY");
 
-    private final RestTemplate restTemplate;
+    private final WebClient webClient;
     private final CityRepository cityRepository;
     private final SunsetSunriseRepository sunsetSunriseRepository;
 
-    public SolarService(RestTemplate restTemplate, CityRepository cityRepository, SunsetSunriseRepository sunsetSunriseRepository) {
-        this.restTemplate = restTemplate;
+    public SolarService(WebClient webClient, CityRepository cityRepository, SunsetSunriseRepository sunsetSunriseRepository) {
+        this.webClient = webClient;
         this.cityRepository = cityRepository;
         this.sunsetSunriseRepository = sunsetSunriseRepository;
     }
@@ -67,32 +68,21 @@ public class SolarService {
 
     private SolarTimesResponse getSolarTimesFromExternalApi(double lat, double lng, String date) {
         String apiUrl = String.format("%s?lat=%s&lng=%s&date=%s", SUNRISE_SUNSET_API_URL, lat, lng, date);
-        SunriseSunsetApiResponse sunriseSunsetApiResponse;
-        try {
-            sunriseSunsetApiResponse = restTemplate.getForObject(apiUrl, SunriseSunsetApiResponse.class);
-        } catch (Exception e) {
-            throw new InvalidDateException();
-        }
-
-        String sunrise = sunriseSunsetApiResponse.getResults().getSunrise();
-        String sunset = sunriseSunsetApiResponse.getResults().getSunset();
-
-        return new SolarTimesResponse(sunrise, sunset);
+        return webClient.get()
+                .uri(apiUrl)
+                .retrieve()
+                .bodyToMono(SunriseSunsetApiResponse.class)
+                .map(sunriseSunsetApiResponse -> new SolarTimesResponse(sunriseSunsetApiResponse.getResults().getSunrise(), sunriseSunsetApiResponse.getResults().getSunset()))
+                .block();
     }
 
     private GeoLocation getCityLocationFromExternalApi(String cityName) {
         String apiUrl = String.format("%s?q=%s&appid=%s", OPENWEATHERMAP_API_URL, cityName, OPENWEATHERMAP_API_KEY);
-        OpenWeatherMapApiResponse openWeatherMapApiResponse;
-
-        try {
-            openWeatherMapApiResponse = restTemplate.getForObject(apiUrl, OpenWeatherMapApiResponse.class);
-        } catch (Exception e) {
-            throw new InvalidCityException();
-        }
-
-        Double latitude = openWeatherMapApiResponse.getCoord().getLat();
-        Double longitude = openWeatherMapApiResponse.getCoord().getLon();
-
-        return new GeoLocation(latitude, longitude);
+        return webClient.get()
+                .uri(apiUrl)
+                .retrieve()
+                .bodyToMono(OpenWeatherMapApiResponse.class)
+                .map(openWeatherMapApiResponse -> new GeoLocation(openWeatherMapApiResponse.getCoord().getLat(), openWeatherMapApiResponse.getCoord().getLon()))
+                .block();
     }
 }
