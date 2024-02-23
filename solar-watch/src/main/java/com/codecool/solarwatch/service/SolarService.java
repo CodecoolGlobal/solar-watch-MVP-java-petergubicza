@@ -1,12 +1,11 @@
 package com.codecool.solarwatch.service;
 
-import com.codecool.solarwatch.exception.InvalidCityException;
-import com.codecool.solarwatch.exception.InvalidDateException;
 import com.codecool.solarwatch.model.*;
+import com.codecool.solarwatch.model.entity.City;
+import com.codecool.solarwatch.model.entity.SunsetSunrise;
 import com.codecool.solarwatch.repository.CityRepository;
 import com.codecool.solarwatch.repository.SunsetSunriseRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
@@ -48,7 +47,7 @@ public class SolarService {
                 addSunsetSunriseToDatabase(city, date, solarTimesResponse.sunrise(), solarTimesResponse.sunset());
             }
 
-        } else {// if DB doesn't have the city
+        } else { // if DB doesn't have the city
             GeoLocation cityLocation = getCityLocationFromExternalApi(cityName);
             solarTimesResponse = getSolarTimesFromExternalApi(cityLocation.getLatitude(), cityLocation.getLongitude(), date);
 
