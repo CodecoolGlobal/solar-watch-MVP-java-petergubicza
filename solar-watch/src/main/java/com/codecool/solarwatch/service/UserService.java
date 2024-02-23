@@ -1,7 +1,7 @@
 package com.codecool.solarwatch.service;
 
 import com.codecool.solarwatch.model.Role;
-import com.codecool.solarwatch.model.entity.UserEntity;
+import com.codecool.solarwatch.model.entity.User;
 import com.codecool.solarwatch.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +21,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserEntity findCurrentUser() {
+    public User findCurrentUser() {
         UserDetails contextUser = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
@@ -31,14 +31,14 @@ public class UserService {
 
     }
 
-    public void addRoleFor(UserEntity user, Role role) {
+    public void addRoleFor(User user, Role role) {
 
         Set<Role> oldRoles = user.getRoles();
 
         Set<Role> copiedRoles = new HashSet<>(oldRoles);
         copiedRoles.add(role);
 
-        userRepository.updateUser(new UserEntity(user.getName(), user.getPassword(), Set.copyOf(copiedRoles)));
+        userRepository.updateUser(new User(user.getName(), user.getPassword(), Set.copyOf(copiedRoles)));
 
     }
 }

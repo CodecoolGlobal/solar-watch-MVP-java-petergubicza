@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -14,10 +14,10 @@ public class UserEntity {
     private String password;
     private Set<Role> roles;
 
-    public UserEntity() {
+    public User() {
     }
 
-    public UserEntity(String name, String password, Set<Role> roles) {
+    public User(String name, String password, Set<Role> roles) {
         this.name = name;
         this.password = password;
         this.roles = roles;

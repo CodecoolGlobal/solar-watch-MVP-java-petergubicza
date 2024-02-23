@@ -1,7 +1,7 @@
 package com.codecool.solarwatch.controller;
 
 import com.codecool.solarwatch.model.Role;
-import com.codecool.solarwatch.model.entity.UserEntity;
+import com.codecool.solarwatch.model.entity.User;
 import com.codecool.solarwatch.model.payload.JwtResponse;
 import com.codecool.solarwatch.model.payload.UserRequest;
 import com.codecool.solarwatch.repository.UserRepository;
@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +40,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<Void> createUser(@RequestBody UserRequest signUpRequest) {
-        UserEntity user = new UserEntity(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), Set.of(Role.USER));
+        User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), Set.of(Role.USER));
         userRepository.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -55,7 +54,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        User userDetails = (User) authentication.getPrincipal();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .toList();
 
@@ -66,7 +65,7 @@ public class UserController {
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public String me() {
-        User user = (User) SecurityContextHolder.getContext()
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         return "Hello " + user.getUsername();
     }

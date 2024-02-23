@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface SunsetSunriseRepository extends JpaRepository<SunsetSunrise, Long> {
     Optional<SunsetSunrise> findByCityAndDate(City city, String date);
+    boolean deleteByCity(City city);
 }

@@ -60,9 +60,9 @@ public class SolarService {
         return solarTimesResponse;
     }
 
-    private void addSunsetSunriseToDatabase(City city, String date, String sunrise, String sunset) {
+    private SunsetSunrise addSunsetSunriseToDatabase(City city, String date, String sunrise, String sunset) {
         SunsetSunrise sunsetSunrise = new SunsetSunrise(city, date, sunrise, sunset);
-        sunsetSunriseRepository.save(sunsetSunrise);
+        return sunsetSunriseRepository.save(sunsetSunrise);
     }
 
     private SolarTimesResponse getSolarTimesFromExternalApi(double lat, double lng, String date) {
@@ -83,5 +83,15 @@ public class SolarService {
                 .bodyToMono(OpenWeatherMapApiResponse.class)
                 .map(openWeatherMapApiResponse -> new GeoLocation(openWeatherMapApiResponse.getCoord().getLat(), openWeatherMapApiResponse.getCoord().getLon()))
                 .block();
+    }
+
+    public SunsetSunrise updateSolarTimes(String cityName, String date, String sunrise, String sunset) {
+        City city = getCityByName(cityName);
+        return addSunsetSunriseToDatabase(city, date, sunrise, sunset);
+    }
+
+    public boolean deleteSolarTimes(String cityName) {
+        City city = getCityByName(cityName);
+        return sunsetSunriseRepository.deleteByCity(city);
     }
 }

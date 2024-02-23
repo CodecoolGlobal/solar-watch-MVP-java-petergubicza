@@ -1,14 +1,13 @@
 package com.codecool.solarwatch.controller;
 
 import com.codecool.solarwatch.model.SolarTimesResponse;
+import com.codecool.solarwatch.model.entity.SunsetSunrise;
 import com.codecool.solarwatch.service.SolarService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/solar-watch")
 public class SolarWatchController {
 
     private SolarService solarService;
@@ -18,7 +17,20 @@ public class SolarWatchController {
     }
 
     @GetMapping("/solar-times")
-    public SolarTimesResponse getSunrise(@RequestParam String city, @RequestParam String date) {
-        return solarService.getSolarTimes(city, date);
+    @PreAuthorize("hasRole('USER')")
+    public SolarTimesResponse getSolarTimes(@RequestParam String cityName, @RequestParam String date) {
+        return solarService.getSolarTimes(cityName, date);
+    }
+
+    @PatchMapping ("/update")
+    @PreAuthorize("hasRole('ADMIN')")
+    public SunsetSunrise updateSolarTimes(@RequestParam String cityName, @RequestParam String date, @RequestParam String sunrise, @RequestParam String sunset) {
+        return solarService.updateSolarTimes(cityName, date, sunrise, sunset);
+    }
+
+    @DeleteMapping ("/delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    public boolean deleteCity(@RequestParam String cityName){
+        return solarService.deleteSolarTimes(cityName);
     }
 }
