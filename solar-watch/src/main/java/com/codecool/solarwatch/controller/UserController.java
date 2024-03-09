@@ -1,8 +1,9 @@
 package com.codecool.solarwatch.controller;
 
 import com.codecool.solarwatch.model.Role;
-import com.codecool.solarwatch.model.entity.User;
+import com.codecool.solarwatch.model.entity.appUser;
 import com.codecool.solarwatch.model.payload.JwtResponse;
+import com.codecool.solarwatch.model.payload.LoginUser;
 import com.codecool.solarwatch.model.payload.UserRequest;
 import com.codecool.solarwatch.repository.UserRepository;
 import com.codecool.solarwatch.security.jwt.JwtUtils;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -39,17 +40,20 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> createUser(@RequestBody UserRequest signUpRequest) {
-        User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), Set.of(Role.USER));
-        userRepository.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<?> createUser(@RequestBody UserRequest registryRequest) {
+        appUser user = new appUser(registryRequest.getName(), encoder.encode(registryRequest.getPassword()), Set.of(Role.ROLE_USER));
+        if (registryRequest.isAdmin()) {
+            user.makeAdmin();
+        }
+        userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody UserRequest loginRequest) {
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginUser loginRequest) {
 
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.name(), loginRequest.password()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -63,15 +67,9 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
     public String me() {
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         return "Hello " + user.getUsername();
-    }
-
-    @GetMapping("/public")
-    public String publicEndpoint() {
-        return "Public\n";
     }
 }

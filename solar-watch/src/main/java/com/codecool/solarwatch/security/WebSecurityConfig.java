@@ -1,4 +1,4 @@
-package com.codecool.solarwatch.config;
+package com.codecool.solarwatch.security;
 
 import com.codecool.solarwatch.security.jwt.AuthEntryPointJwt;
 import com.codecool.solarwatch.security.jwt.AuthTokenFilter;
@@ -62,9 +62,12 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("user/**").permitAll()
-                                .requestMatchers("team/**").hasRole("USER")
-                                .requestMatchers("/error").permitAll()
+                        auth.requestMatchers("api/user/register").permitAll()
+                                .requestMatchers("api/user/login").permitAll()
+                                .requestMatchers("api/user/me").hasRole("USER")
+                                .requestMatchers("api/solar-watch/solar-times").hasRole("USER")
+                                .requestMatchers("api/solar-watch/update").hasRole("ADMIN")
+                                .requestMatchers("api/solar-watch/delete").hasRole("ADMIN")
                                 .anyRequest().authenticated()
 
                 );

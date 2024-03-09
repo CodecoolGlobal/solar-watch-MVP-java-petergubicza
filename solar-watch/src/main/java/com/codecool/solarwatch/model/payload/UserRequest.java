@@ -1,14 +1,39 @@
 package com.codecool.solarwatch.model.payload;
 
-public class UserRequest {
-    private String username;
-    private String password;
+import com.codecool.solarwatch.model.Role;
 
-    public String getUsername() {
-        return username;
+import java.util.Set;
+
+public class UserRequest {
+    private String name;
+    private String password;
+    private boolean isAdmin;
+
+    public UserRequest() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
         return password;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
 }
+
