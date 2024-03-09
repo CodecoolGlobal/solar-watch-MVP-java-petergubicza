@@ -1,0 +1,22 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: solarwatchapi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PGPW}
+    ports:
+      - "5432:5432"
+
+  application:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/solarwatchapi
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${PGPW}
+    depends_on:
+      - postgres
