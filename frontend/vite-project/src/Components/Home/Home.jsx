@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [cityName, setCityName] = useState("");
@@ -7,6 +8,7 @@ export default function Home() {
   const [sunset, setSunset] = useState("");
   const isAdmin = true;
   const [apiResponse, setApiResponse] = useState(null);
+  const navigate = useNavigate();
 
   async function handleSubmit() {
 
@@ -19,34 +21,6 @@ export default function Home() {
       const data = await response.json();
 
     setApiResponse(data);
-  }
-
-  async function handleUpdate() {
-    const body = {
-      cityName,
-      date,
-      sunrise,
-      sunset,
-    };
-
-    async function patchData(url, body) {
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify(body),
-      });
-      const data = await response.json();
-      return data;
-    }
-
-    await patchData(`/api/solar-watch/update`, body);
-    setCityName("");
-    setDate("");
-    setSunrise("");
-    setSunset("");
   }
 
   async function handleDelete() {
@@ -108,7 +82,7 @@ export default function Home() {
       {isAdmin && (
         <div>
           <h3>Admin Actions</h3>
-          <button onClick={handleUpdate}>Update</button>
+          <button onClick={() => navigate("/update")}>Update</button>
           <button onClick={handleDelete}>Delete</button>
         </div>
       )}

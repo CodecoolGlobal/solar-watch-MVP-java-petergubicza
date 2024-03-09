@@ -3,7 +3,6 @@ package com.codecool.solarwatch.controller;
 import com.codecool.solarwatch.model.SolarTimesResponse;
 import com.codecool.solarwatch.model.entity.SunsetSunrise;
 import com.codecool.solarwatch.service.SolarService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +26,7 @@ public class SolarWatchController {
     }
 
     @DeleteMapping ("/delete")
-    public boolean deleteCity(@RequestParam String cityName){
+    public boolean deleteCity(@RequestParam String cityName, @RequestParam String date){
         return solarService.deleteSolarTimes(cityName);
     }
 }
