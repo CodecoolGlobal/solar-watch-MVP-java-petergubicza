@@ -1,1 +1,1 @@
-No starter code is provided. Start from scratch!
+This is a school project in which I develop a solar watch API
