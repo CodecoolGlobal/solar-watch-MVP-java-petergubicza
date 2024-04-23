@@ -1,1 +1,1 @@
-This is a school project in which I develop a solar watch API
+In this school project that evolved weekly, I developed a web application for checking weather forecasts by city and date. This journey led me to explore external APIs, delve into the Spring framework, and optimize performance using Docker.
